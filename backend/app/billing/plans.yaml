@@ -1,0 +1,50 @@
+# This file defines the subscription plans for the application.
+# It is loaded by the billing service to determine plan features and limits.
+
+plans:
+  - id: essential
+    name: Essential
+    price: 49
+    currency: USD
+    description: "For small teams getting started with cloud security."
+    stripe_price_id: "price_essential_placeholder" # Replace with actual Stripe Price ID
+    features:
+      - "1 Core Product Module"
+      - "Weekly Scans"
+      - "Basic AI Assistance"
+    modules:
+      - "cspm"
+
+  - id: growth
+    name: Growth
+    price: 199
+    currency: USD
+    description: "For growing businesses that need broader security coverage."
+    stripe_price_id: "price_growth_placeholder"
+    features:
+      - "Any 3 Product Modules"
+      - "Daily Scans"
+      - "Advanced AI Assistance & Fixes"
+    modules:
+      - "cspm"
+      - "ciem"
+      - "kspm"
+
+  - id: scale
+    name: Scale
+    price: 499
+    currency: USD
+    description: "For businesses that require comprehensive security and compliance."
+    stripe_price_id: "price_scale_placeholder"
+    features:
+      - "All Product Modules"
+      - "On-Demand Scans"
+      - "Compliance Reporting"
+      - "Attack Path Analysis"
+    modules:
+      - "cspm"
+      - "ciem"
+      - "kspm"
+      - "secretguard"
+      - "attackpath"
+      - "compliance"
