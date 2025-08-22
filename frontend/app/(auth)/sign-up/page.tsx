@@ -1,0 +1,124 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import apiFetch from "@/lib/api";
+
+export default function SignUpPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [tenantName, setTenantName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      await apiFetch("/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+          full_name: fullName,
+          tenant_name: tenantName,
+        }),
+      });
+      router.push("/sign-in");
+    } catch (err: any) {
+      setError(err.message || "An error occurred during sign-up.");
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center text-gray-900">
+          Create Your Account
+        </h2>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="tenantName"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Company Name
+            </label>
+            <input
+              id="tenantName"
+              name="tenantName"
+              type="text"
+              required
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              value={tenantName}
+              onChange={(e) => setTenantName(e.target.value)}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="fullName"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Full Name
+            </label>
+            <input
+              id="fullName"
+              name="fullName"
+              type="text"
+              required
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <div>
+            <button
+              type="submit"
+              className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
