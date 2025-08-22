@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, BarChart, FileText, Settings, LogOut, Users } from "lucide-react";
+import { Shield, BarChart, FileText, Settings, LogOut, Users, Server } from "lucide-react";
 
 // --- START INLINE COMPONENT: Sidebar ---
 // Workaround: Defining component in the same file due to file creation issues.
@@ -17,6 +17,7 @@ const Sidebar = () => {
     { href: "/app/dashboard", icon: BarChart, label: "Dashboard" },
     { href: "/app/products/cspm", icon: Shield, label: "CSPM-Lite" },
     { href: "/app/products/ciem", icon: Users, label: "CIEM-Lite" },
+    { href: "/app/products/kspm", icon: Server, label: "KSPM-Lite" },
     { href: "/app/products/compliance", icon: FileText, label: "Compliance" },
     { href: "/app/settings", icon: Settings, label: "Settings" },
   ];

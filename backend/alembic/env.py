@@ -25,6 +25,7 @@ from app.users.models import User, Tenant
 from app.billing.models import Subscription
 from app.products.cspm.models import CSPMScan, CSPMFinding
 from app.products.ciem.models import IdentityScan, IdentityFinding
+from app.products.kspm.models import ClusterScan, ClusterFinding
 # Import other models here as they are created
 
 # Set the database URL from the app settings
