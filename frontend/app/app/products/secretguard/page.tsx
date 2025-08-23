@@ -1,0 +1,123 @@
+"use client";
+
+import { useState, useEffect } from "react";
+
+// --- START INLINE HELPER: apiFetch ---
+async function apiFetch(endpoint: string, options: RequestInit = {}): Promise<any> {
+  const BASE_URL = "http://localhost:8000/api/v1";
+  const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
+
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...options.headers,
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${BASE_URL}${endpoint}`, { ...options, headers });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+}
+// --- END INLINE HELPER: apiFetch ---
+
+
+// --- START INLINE COMPONENT: Table ---
+const Table = ({ columns, data }: { columns: any[], data: any[] }) => {
+  if (!data || data.length === 0) {
+    return <p className="text-gray-500">No data available.</p>;
+  }
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white rounded-lg shadow">
+        <thead>
+          <tr className="w-full bg-gray-100 text-left text-gray-600 uppercase text-sm">
+            {columns.map((col) => (
+              <th key={col.accessor} className="p-4">{col.Header}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, rowIndex) => (
+            <tr key={rowIndex} className="border-b border-gray-200">
+              {columns.map((col) => (
+                <td key={col.accessor} className="p-4">{row[col.accessor]}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+// --- END INLINE COMPONENT: Table ---
+
+
+export default function SecretGuardPage() {
+  const [findings, setFindings] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchFindings = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await apiFetch("/secretguard/findings");
+      setFindings(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleScan = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await apiFetch("/secretguard/scans", { method: "POST" });
+      await fetchFindings();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFindings();
+  }, []);
+
+  const columns = [
+    { Header: "Location", accessor: "location" },
+    { Header: "Secret Type", accessor: "secret_type" },
+    { Header: "Severity", accessor: "severity" },
+    { Header: "Details", accessor: "details" },
+  ];
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">SecretGuard Findings</h1>
+        <button
+          onClick={handleScan}
+          disabled={isLoading}
+          className="px-4 py-2 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+        >
+          {isLoading ? "Scanning..." : "Trigger New Scan"}
+        </button>
+      </div>
+      {error && <p className="text-red-500 mb-4">Error: {error}</p>}
+      {isLoading ? (
+        <p>Loading findings...</p>
+      ) : (
+        <Table columns={columns} data={findings} />
+      )}
+    </div>
+  );
+}
