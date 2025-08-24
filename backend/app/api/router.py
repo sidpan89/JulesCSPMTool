@@ -6,6 +6,7 @@ from app.products.ciem.router import router as ciem_router
 from app.products.kspm.router import router as kspm_router
 from app.products.secretguard.router import router as secretguard_router
 from app.products.attackpath.router import router as attackpath_router
+from app.products.compliance.router import router as compliance_router
 
 api_router = APIRouter()
 
@@ -20,3 +21,4 @@ api_router.include_router(ciem_router, prefix="/ciem", tags=["CIEM-Lite"])
 api_router.include_router(kspm_router, prefix="/kspm", tags=["KSPM-Lite"])
 api_router.include_router(secretguard_router, prefix="/secretguard", tags=["SecretGuard"])
 api_router.include_router(attackpath_router, prefix="/attackpath", tags=["AttackPath"])
+api_router.include_router(compliance_router, prefix="/compliance", tags=["Compliance"])

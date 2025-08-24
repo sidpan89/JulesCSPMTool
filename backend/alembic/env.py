@@ -28,6 +28,7 @@ from app.products.ciem.models import IdentityScan, IdentityFinding
 from app.products.kspm.models import ClusterScan, ClusterFinding
 from app.products.secretguard.models import SecretScan, SecretFinding
 from app.products.attackpath.models import AttackPathAnalysis, AttackPathNode, AttackPathEdge
+from app.products.compliance.models import ComplianceReport
 # Import other models here as they are created
 
 # Set the database URL from the app settings
