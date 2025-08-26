@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import apiFetch from "@/lib/api";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -16,19 +15,22 @@ export default function SignUpPage() {
     e.preventDefault();
     setError(null);
 
-    try {
-      await apiFetch("/signup", {
-        method: "POST",
-        body: JSON.stringify({
-          email,
-          password,
-          full_name: fullName,
-          tenant_name: tenantName,
-        }),
-      });
+    const response = await fetch("http://localhost:8000/api/v1/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+        full_name: fullName,
+        tenant_name: tenantName,
+      }),
+    });
+
+    if (response.ok) {
       router.push("/sign-in");
-    } catch (err: any) {
-      setError(err.message || "An error occurred during sign-up.");
+    } else {
+      const data = await response.json();
+      setError(data.detail || "An error occurred during sign-up.");
     }
   };
 
