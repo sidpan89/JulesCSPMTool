@@ -1,5 +1,5 @@
 # Stage 1: Build stage - Install dependencies
-FROM python:3.11-slim as builder
+FROM python:3.11-slim-bullseye as builder
 
 WORKDIR /usr/src/app
 
@@ -21,7 +21,7 @@ RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 
 # Stage 2: Final stage - Create the production image
-FROM python:3.11-slim
+FROM python:3.11-slim-bullseye
 
 WORKDIR /app
 
