@@ -8,13 +8,13 @@ async function apiFetch(endpoint: string, options: RequestInit = {}): Promise<an
   const BASE_URL = "http://localhost:8000/api/v1";
   const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
 
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    ...options.headers,
-  };
+  const headers = new Headers(options.headers);
+  if (!headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
 
   if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+    headers.set("Authorization", `Bearer ${token}`);
   }
 
   const response = await fetch(`${BASE_URL}${endpoint}`, { ...options, headers });

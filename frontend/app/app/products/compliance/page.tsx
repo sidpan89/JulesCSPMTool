@@ -7,25 +7,24 @@ async function apiFetch(endpoint: string, options: RequestInit = {}): Promise<an
   const BASE_URL = "http://localhost:8000/api/v1";
   const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
 
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    ...options.headers,
-  };
+  const headers = new Headers(options.headers);
+  if (!headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
 
   if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+    headers.set("Authorization", `Bearer ${token}`);
   }
 
   const response = await fetch(`${BASE_URL}${endpoint}`, { ...options, headers });
 
   if (!response.ok) {
-    // Try to parse error detail, but fall back to status text
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
   }
 
   // For HTML response, we need to handle it as text
-  if (options.headers && (options.headers as any)['Accept'] === 'text/html') {
+  if (headers.get('Accept') === 'text/html') {
       return response.text();
   }
 
