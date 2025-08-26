@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     # Database URL. For the SQLite workaround, this will be a file path.
     # e.g., "sqlite:///./sql_app.db"
     # The actual value will be loaded from the .env file.
-    DATABASE_URL: str = "sqlite:////app/backend/sql_app.db"
+    DATABASE_URL: str = "sqlite:////app/sql_app.db"
 
     # External Services
     OPENAI_API_KEY: str | None = None
