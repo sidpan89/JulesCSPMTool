@@ -8,10 +8,9 @@ cd "$(dirname "$0")/.."
 echo "Seeding the database with demo data..."
 echo "This may take a moment..."
 
-# Set the SECRET_KEY environment variable required by the seeding script
-# and run the python script.
-SECRET_KEY='your_super_secret_key_for_jwt' \
-python3 backend/seed_db.py
+# Run the python seeding script inside the 'backend' container
+# This ensures it has access to the installed packages and the correct environment
+docker-compose exec backend python3 /app/seed_db.py
 
 if [ $? -eq 0 ]; then
     echo "✅ Seeding complete."
